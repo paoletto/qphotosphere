@@ -1,0 +1,97 @@
+= QAD photosphere viewer for Qt =
+
+This is an initial implementation of a spherical viewer
+for equirectangular pictures, also known as Photo Spheres,
+or 360 pictures, in form of a QML element, distributed
+through a qml plugin.
+
+
+ToDo:
+
+- fix the missing update issue. Currently worked around with a
+  "FpsMeter" hack. calling update() on an item that has content 
+  MUST work.
+
+- Fix transformations to play correctly with QtQuick (currently
+  (only working fullscreen)
+
+- Use GLUES instead of GLU to render the sphere. Get it to build
+  in a decently cross-platform way.
+
+- Fix shaders to be ES2 compliant
+
+- Add a proper gesture area with pinch to zoom. Also, properly
+  re-anchor touch points so that panning/zooming follows the fingers.
+
+- Support large images on all platform by blitting only the visible
+  part of the image (mipmpa) to the texture and adapting the texture
+  matrix appropriately.
+
+- Support photosphere metadata that can be read using TinyEXIF (already
+  included and tested) <-- this depends on TinyXML2
+
+- Redesign the QML API
+
+
+
+Example usage (currently):
+
+import QtQuick 2.7
+import QtQuick.Window 2.2
+import PhotoSphere 1.0
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Hello World")
+
+    // Insert your update() hack of choice here, something that pushes redraws
+
+    Rectangle {
+        id: container
+        anchors.fill: parent
+        visible: true
+        color: "transparent"
+
+        PhotoSphere {
+            id: sphere
+            visible: true
+            anchors.fill: parent
+            imageUrl: "<your photosphere url>" // this initial version supports correctly only full 360 panospheres
+
+            MouseArea {
+                id: ma
+                anchors.fill: parent
+                property var clickedPos;
+                property var clickedAzimuth;
+                property var clickedElevation;
+                property var clickedFoV;
+                onPressed: {
+                    clickedPos = Qt.point(mouseX, mouseY)
+                    clickedAzimuth = sphere.azimuth
+                    clickedElevation = sphere.elevation
+                }
+                onPositionChanged: {
+                    var curpos = Qt.point(mouseX, mouseY)
+                    var posDiff = Qt.point(curpos.x - ma.clickedPos.x, curpos.y - ma.clickedPos.y)
+
+                    sphere.azimuth = clickedAzimuth + posDiff.x / 6.0
+                    sphere.elevation = clickedElevation + posDiff.y / 6.0
+                    console.log(sphere.azimuth, sphere.elevation)
+                }
+                onWheel: {
+                    if (wheel.modifiers & Qt.ControlModifier) {
+                        sphere.fieldOfView +=  wheel.angleDelta.y / 120;
+                        console.log(sphere.fieldOfView)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
