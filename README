@@ -6,7 +6,7 @@ or 360 pictures, in form of a QML element, distributed
 through a qml plugin.
 
 
-ToDo:
+== ToDo ==
 
 - fix the missing update issue. Currently worked around with a
   "FpsMeter" hack. calling update() on an item that has content 
@@ -30,11 +30,16 @@ ToDo:
 - Support photosphere metadata that can be read using TinyEXIF (already
   included and tested) <-- this depends on TinyXML2
 
+- Support proper orientation (bearing) of the image, and prototype
+  the combination with QtPositioning
+
 - Redesign the QML API
 
+- Support video sources
 
 
-Example usage (currently):
+
+== Example usage (currently) ==
 
 import QtQuick 2.7
 import QtQuick.Window 2.2

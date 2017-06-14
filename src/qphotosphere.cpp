@@ -186,7 +186,7 @@ void QmlPhotoSphereRenderNode::render(const QSGRenderNode::RenderState *state)
         "{\n"
         "    lowp vec4 texColor = texture(samImage, texCoord.xy);\n"
         "    //gl_FragColor = vec4(texCoord.xy, 0 , 1); //color; \n"
-        "    gl_FragColor = vec4(texColor.rgb, 1.0); //color; \n"
+        "    gl_FragColor = vec4(texColor.rgb, color.a); //color; \n"
         "}\n"
         "\n";
 
@@ -219,7 +219,7 @@ void QmlPhotoSphereRenderNode::render(const QSGRenderNode::RenderState *state)
 
     m_shader->bind();
     m_shader->setUniformValue("matrix", transformation);
-    m_shader->setUniformValue("color", QColor(255,0,0));
+    m_shader->setUniformValue("color", QColor(255, 0, 0, m_quickPhotoSphere->opacity() * 255));
     m_shader->setUniformValue("samImage", 0);
     m_vao->bind();
 
