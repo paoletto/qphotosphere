@@ -87,8 +87,10 @@ Window {
                 }
                 onWheel: {
                     if (wheel.modifiers & Qt.ControlModifier) {
-                        sphere.fieldOfView +=  wheel.angleDelta.y / 120;
-                        console.log(sphere.fieldOfView)
+                        sphere.fieldOfView -=  wheel.angleDelta.y / 30 ;
+                    } else {
+                        sphere.azimuth +=  wheel.angleDelta.x / 10 ;
+                        sphere.elevation +=  wheel.angleDelta.y / 30 ;
                     }
                 }
             }
