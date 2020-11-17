@@ -405,6 +405,9 @@ QSGNode *QmlPhotoSphere::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePai
     if (!photoSphereNode)
         photoSphereNode = new QmlPhotoSphereRenderNode(this);
 
+    // Update issue fix
+    photoSphereNode->markDirty(QSGNode::DirtyMaterial);
+
     return photoSphereNode;
 }
 
